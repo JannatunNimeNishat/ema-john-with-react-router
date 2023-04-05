@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import Cart from '../Cart/Cart';
-import { useLoaderData } from 'react-router-dom';
+import { Link, useLoaderData } from 'react-router-dom';
 import ReviewItem from '../ReviewItem/ReviewItem';
 //css
 import './Orders.css'
 import { removeFromDb } from '../../utilities/fakedb';
+import { deleteShoppingCart } from '../../utilities/fakedb';
 const Orders = () => {
     const savedCart = useLoaderData();
     const [cart,setCart] = useState(savedCart)
@@ -14,7 +15,11 @@ const Orders = () => {
         setCart(newCart)
         removeFromDb(id)
     }
-    console.log(cart);
+    const handleClearCart = ()=>{
+        setCart([]);
+        deleteShoppingCart();
+
+    }
     return (
         <div className='shop-container'>
             <div className='review-container'>
@@ -27,7 +32,14 @@ const Orders = () => {
                 }
             </div>
             <div className="cart-container">
-                <Cart cart={cart}></Cart>
+                <Cart
+                 cart={cart}
+                 handleClearCart={handleClearCart} 
+                 >
+                    <Link className='proceed-link' to='/checkout'>
+                    <button className='btn-processed'>Proceed Checkout</button>
+                    </Link>
+                 </Cart>
             </div>
         </div>
     );
